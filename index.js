@@ -1,9 +1,15 @@
 const PORT = 3000;
 const express = require('express');
-const server = express();
 const apiRouter = require('./api');
-server.use('/api', apiRouter);
 const morgan = require('morgan');
+const { client } = require('./db');
+require("dotenv").config();
+
+const server = express();
+
+client.connect();
+
+server.use('/api', apiRouter);
 
 server.use(morgan('dev'));
 
@@ -16,11 +22,6 @@ server.use((req, res, next) => {
   
     next();
   });
-
-
-
-  const { client } = require('./db');
-  client.connect();
 
 server.listen(PORT, () => {
   console.log('The server is up on port', PORT)
